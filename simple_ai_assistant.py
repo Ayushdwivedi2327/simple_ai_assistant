@@ -1,14 +1,20 @@
 from openai import OpenAI
+from dotenv import load_dotenv
+import os
+load_dotenv()
 client = OpenAI(
-    base_url="http://127.0.0.1:11434/v1",
-    api_key="ollama"
+   base_url=os.getenv("base_url"),
+   api_key=os.getenv("api_key")
 )
 
-response = client.chat.completions.create(
-    model="qwen3:4b",
-    messages=[
-        {"role": "user", "content": "Hello LLM"}
+while True:
+    user_inp = input("You :\n")
+    if user_inp.lower() in ["exit","bye","quit","goodbye"]:
+        break
+    response = client.chat.completions.create(
+    model=os.getenv("model"),
+    messages=[ 
+        {"role": "user", "content": user_inp}
     ]
 )
-
-print(response.choices[0].message.content)
+    print("Assistant : " , response.choices[0].message.content)
